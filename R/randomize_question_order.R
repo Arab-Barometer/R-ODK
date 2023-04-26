@@ -41,7 +41,7 @@
 #' @param pth Optional - A file path to where the output should be saved. Defaults to the current working directory
 #'
 #' @return A ODK-style survey sheet as a data frame and an .xlsx sheet
-#' @export randomize_question_order
+#' @export
 randomize_question_order <- function(xlsform,
                                      .group_id = NULL,
                                      pth = NULL){

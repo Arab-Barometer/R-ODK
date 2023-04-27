@@ -4,7 +4,7 @@
 \alias{randomize_question_order}
 \title{Randomize Question Order}
 \usage{
-randomize_question_order(xlsform, .group_id = NULL, pth = NULL)
+randomize_question_order(xlsform, .group_id = NULL, pth = NULL, output = TRUE)
 }
 \arguments{
 \item{xlsform}{A (path to a) ODK xlsx survey sheet that has a set of programmed grid questions}
@@ -12,6 +12,8 @@ randomize_question_order(xlsform, .group_id = NULL, pth = NULL)
 \item{.group_id}{Optional - A vector of either integers or characters that describe how the questions should be grouped together. Defaults to NULL, which randomized every question}
 
 \item{pth}{Optional - A file path to where the output should be saved. Defaults to the current working directory}
+
+\item{output}{Optional - If TRUE will return the xlsx form as a data frame to R. If FALSE the only output is the xlsx file. Defaults to TRUE}
 }
 \value{
 A ODK-style survey sheet as a data frame and an .xlsx sheet

@@ -39,12 +39,14 @@
 #' @param xlsform A (path to a) ODK xlsx survey sheet that has a set of programmed grid questions
 #' @param .group_id Optional - A vector of either integers or characters that describe how the questions should be grouped together. Defaults to NULL, which randomized every question
 #' @param pth Optional - A file path to where the output should be saved. Defaults to the current working directory
+#' @param output Optional - If TRUE will return the xlsx form as a data frame to R. If FALSE the only output is the xlsx file. Defaults to TRUE
 #'
 #' @return A ODK-style survey sheet as a data frame and an .xlsx sheet
 #' @export
 randomize_question_order <- function(xlsform,
                                      .group_id = NULL,
-                                     pth = NULL){
+                                     pth = NULL,
+                                     output = TRUE){
 
   odk_grid <- readxl::read_xlsx(xlsform)
 
@@ -156,5 +158,5 @@ randomize_question_order <- function(xlsform,
                       path = paste0(df_name,".xlsx"))
 
 
-  return(.new_df)
+  if(output){.new_df}
 }

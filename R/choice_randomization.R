@@ -38,6 +38,7 @@ randomize_choice_order <- function(choice_sheet,
                                    output = TRUE){
 
   choice_sheet <- readxl::read_xlsx(choice_sheet)
+  n_rows <- nrow(choice_sheet)
 
   if(is.null(freeze_top) & is.null(freeze_bottom)){
 
@@ -46,21 +47,21 @@ randomize_choice_order <- function(choice_sheet,
 
   } else if(is.null(freeze_top) & !is.null(freeze_bottom)){
 
-    freeze_rows <- choice_sheet[(dim(choice_sheet)[1] - freeze_bottom + 1):dim(choice_sheet)[1],]
-    randomize_rows <- choice_sheet[1:(dim(choice_sheet)[1] + freeze_bottom),]
+    freeze_rows <- choice_sheet[(n_rows - freeze_bottom + 1):n_rows,]
+    randomize_rows <- choice_sheet[1:(n_rows + freeze_bottom),]
 
   } else if(!is.null(freeze_top) & is.null(freeze_bottom)){
 
     freeze_rows <- choice_sheet[1:freeze_top,]
-    randomize_rows <- choice_sheet[(freeze_top + 1):dim(choice_sheet)[1],]
+    randomize_rows <- choice_sheet[(freeze_top + 1):n_rows,]
 
   } else {
     top_rows <- choice_sheet[1:freeze_top,]
-    bottom_rows <- choice_sheet[(dim(choice_sheet)[1] - freeze_bottom + 1):dim(choice_sheet)[1],]
-    randomize_rows <- choice_sheet[(freeze_top+1):(dim(choice_sheet)[1] - freeze_bottom),]
+    bottom_rows <- choice_sheet[(n_rows - freeze_bottom + 1):n_rows,]
+    randomize_rows <- choice_sheet[(freeze_top+1):(n_rows - freeze_bottom),]
   }
 
-  all.perm <- combinat::permn(1:dim(randomize_rows)[1])
+  all.perm <- combinat::permn(1:nrow(randomize_rows))
 
   randomized_top <- function(x){
     new_df <- rbind(randomize_rows[order(all.perm[[x]]),],
@@ -122,4 +123,3 @@ randomize_choice_order <- function(choice_sheet,
   if(output){randomized_choices}
 
 }
-

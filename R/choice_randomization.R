@@ -116,8 +116,9 @@ randomize_choice_order <- function(choice_sheet,
                     paste0(unique(choice_sheet[["list_name"]]),"_randomized"),
                     paste0(pth,unique(choice_sheet[["list_name"]]),"_randomized"))
 
-  writexl::write_xlsx(randomized_choices,
-                      path = paste0(df_name,".xlsx"))
+  write.csv(randomized_choices,
+            path = paste0(df_name,".csv"),
+            row.names = FALSE)
 
 
   if(output){randomized_choices}

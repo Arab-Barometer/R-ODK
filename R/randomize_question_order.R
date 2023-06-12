@@ -50,6 +50,10 @@ randomize_question_order <- function(xlsform,
 
   odk_grid <- readxl::read_xlsx(xlsform)
 
+  if(!all(c("name","relevant") %in% names(odk_grid))){
+    stop("Make sure the form you are loading is an ODK survey sheet.")
+  }
+
   # Extracting question name:
   q_name <- stringr::str_extract(odk_grid[["name"]][1],"[:alnum:]+") ## Question number
 

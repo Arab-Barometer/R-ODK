@@ -16,4 +16,5 @@ Imports:
     insight,
     readxl,
     stringr,
-    writexl
+    writexl,
+    purrr

@@ -4,12 +4,20 @@
 \alias{randomize_question_order}
 \title{Randomize Question Order}
 \usage{
-randomize_question_order(xlsform, .group_id = NULL, pth = NULL, output = TRUE)
+randomize_question_order(
+  xlsform,
+  .group_id = NULL,
+  permutation_limit = NULL,
+  pth = NULL,
+  output = TRUE
+)
 }
 \arguments{
 \item{xlsform}{A (path to a) ODK xlsx survey sheet that has a set of programmed grid questions}
 
 \item{.group_id}{Optional - A vector of either integers or characters that describe how the questions should be grouped together. Defaults to NULL, which randomized every question}
+
+\item{permutation_limit}{Optional - An integer to select a random sample of all possible permutations for semi-randomization}
 
 \item{pth}{Optional - A file path to where the output should be saved. Defaults to the current working directory}
 

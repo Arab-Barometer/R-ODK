@@ -142,7 +142,7 @@ randomize_question_order <- function(xlsform,
   .new_df <- dplyr::add_row(.new_df,
                      type = "calculate",
                      name = calc_name,
-                     calculation = stringr::str_glue("round((once(random())*{length(all.perm) - 1})+1,0)"),
+                     calculation = stringr::str_glue("once(round((random()*{length(all.perm) - 1})+1,0))"),
                      .before = 1)
 
   .new_df$group_id <- NULL

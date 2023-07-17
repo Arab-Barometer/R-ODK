@@ -23,7 +23,7 @@
 #' last. The `freeze_top` parameter should then be set to `1` and the `freeze_bottom`
 #' parameter should be set to `2`.
 #'
-#' @param choice_sheet A (path to a) ODK xlsx cohice sheet that has a set of programmed choices
+#' @param choice_sheet A (path to a) ODK xlsx choice sheet that has a set of programmed choices
 #' @param freeze_top Optional - Number of rows at the top of the choice list that should stay frozen. Defaults to NULL
 #' @param freeze_bottom Optional - Number of rows at the bottom of the choice list that should stay froze. Defaults to NULL. If both `freeze_top` and `freeze_bottom` are NULL, items with a value less than 90 will be randomized.
 #' @param pth Optional - A file path to where the output should be saved. Defaults to the current working directory
@@ -103,7 +103,7 @@ randomize_choice_order <- function(choice_sheet,
 
 
   insight::format_warning("Do not forget to create a calculate question in the {.b survey} sheet with the following calculation:",
-                          stringr::str_glue("round((once(random())*{length(all.perm) - 1}) + 1, 0)"))
+                          stringr::str_glue("once(round((random()*{length(all.perm) - 1})) + 1, 0)"))
 
 
   if(!is.null(pth)){

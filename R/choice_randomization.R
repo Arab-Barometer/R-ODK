@@ -27,7 +27,7 @@
 #' @param freeze_top Optional - Number of rows at the top of the choice list that should stay frozen. Defaults to NULL
 #' @param freeze_bottom Optional - Number of rows at the bottom of the choice list that should stay froze. Defaults to NULL. If both `freeze_top` and `freeze_bottom` are NULL, items with a value less than 90 will be randomized.
 #' @param pth Optional - A file path to where the output should be saved. Defaults to the current working directory
-#' @param formatt Either `"xlsx"` or `"csv"`; Defaults to "xlsx"
+#' @param formatt Either `"xlsx"` or `"csv"`; Defaults to `"csv"`. If the number of additional rows is too large, the function will automatically switch to `"csv"` regardless of user choice.
 #' @param output Optional - If TRUE will return the xlsx form as a data frame to R. If FALSE the only output is the xlsx file. Defaults to TRUE
 #'
 #' @return A ODK-style choice sheet as a data frame and an .xlsx sheet
@@ -36,11 +36,16 @@ randomize_choice_order <- function(choice_sheet,
                                    freeze_top = NULL,
                                    freeze_bottom = NULL,
                                    pth = NULL,
-                                   formatt = "xlsx",
+                                   formatt = "csv",
                                    output = TRUE){
 
   choice_sheet <- readxl::read_xlsx(choice_sheet)
   n_rows <- nrow(choice_sheet)
+
+
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ##                    Selecting Rows to Freeze & Randomize                  ----
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   if(is.null(freeze_top) & is.null(freeze_bottom)){
 
@@ -74,6 +79,25 @@ randomize_choice_order <- function(choice_sheet,
   }
 
 
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ##                                Size Warning                              ----
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+  if(nrow(randomize_rows) > 6 & nrow(randomize_rows) < 9){
+    freeze_size <- ifelse(!is.null(freeze_top),nrow(top_freeze),0) + nrow(freeze_bottom)
+    warning(glue::glue("This will be a large file. There will be {factorial(nrow(randomize_rows))*nrow(randomize_rows) + freeze_size} rows in this file."))
+  } else if (nrow(randomize_rows) >= 9){
+    warning(glue::glue("There are too many rows to open this file in Excel.",
+                       "This function will automatically save it as a csv.",
+                       "There will be {factorial(nrow(randomize_rows))*nrow(randomize_rows) + freeze_size} rows in this file."))
+  }
+
+
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ##                            Creating Permutations                         ----
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
   all.perm <- combinat::permn(1:nrow(randomize_rows))
 
@@ -82,6 +106,11 @@ randomize_choice_order <- function(choice_sheet,
   new_df <- do.call(rbind,new_df)
   names(new_df)[5] <- "RandomChoice"
 
+
+
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ##                     Constructing Randomized Data Frame                   ----
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
   if(is.null(freeze_top)){
@@ -108,10 +137,21 @@ randomize_choice_order <- function(choice_sheet,
 
   }
 
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ##                            Calculation Reminders                         ----
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
   insight::format_warning("Do not forget to create a {.b calculate question} in the survey sheet with the following calculation:",
                           stringr::str_glue("once(round((random()*{length(all.perm) - 1})) + 1, 0)"))
   insight::format_warning("Do not forget to create a {.b choice filter} in the survey sheet with the following calculation:",
                           stringr::str_glue("RandomChoice = ${calculate question name} or RandomChoice = 0"))
+
+
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ##                                   Saving                                 ----
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
   if(!is.null(pth)){
     if(stringr::str_detect(pth,"/",negate = T)){
@@ -123,14 +163,19 @@ randomize_choice_order <- function(choice_sheet,
                     paste0(unique(choice_sheet[["list_name"]]),"_randomized"),
                     paste0(pth,unique(choice_sheet[["list_name"]]),"_randomized"))
 
-  if (formatt == "xlsx"){
-    writexl::write_xlsx(randomized_choices,
-                        path = paste0(df_name,".xlsx"))
-  } else if (formatt == "csv"){
+  if (formatt == "csv" | nrow(randomize_rows) >= 9){
     write.csv(randomized_choices,
               file = paste0(df_name,".csv"),
               row.names = FALSE)
+  } else if (formatt == "xlsx" & nrow(randomize_rows) < 9){
+    writexl::write_xlsx(randomized_choices,
+                        path = paste0(df_name,".xlsx"))
   }
+
+
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ##                          Optional Console Output                         ----
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 

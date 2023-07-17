@@ -9,7 +9,7 @@ randomize_choice_order(
   freeze_top = NULL,
   freeze_bottom = NULL,
   pth = NULL,
-  formatt = "xlsx",
+  formatt = "csv",
   output = TRUE
 )
 }
@@ -22,7 +22,7 @@ randomize_choice_order(
 
 \item{pth}{Optional - A file path to where the output should be saved. Defaults to the current working directory}
 
-\item{formatt}{Either `"xlsx"` or `"csv"`; Defaults to "xlsx"}
+\item{formatt}{Either `"xlsx"` or `"csv"`; Defaults to `"csv"`. If the number of additional rows is too large, the function will automatically switch to `"csv"` regardless of user choice.}
 
 \item{output}{Optional - If TRUE will return the xlsx form as a data frame to R. If FALSE the only output is the xlsx file. Defaults to TRUE}
 }

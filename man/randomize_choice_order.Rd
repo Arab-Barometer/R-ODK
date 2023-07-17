@@ -9,17 +9,20 @@ randomize_choice_order(
   freeze_top = NULL,
   freeze_bottom = NULL,
   pth = NULL,
+  formatt = "xlsx",
   output = TRUE
 )
 }
 \arguments{
-\item{choice_sheet}{A (path to a) ODK xlsx cohice sheet that has a set of programmed choices}
+\item{choice_sheet}{A (path to a) ODK xlsx choice sheet that has a set of programmed choices}
 
 \item{freeze_top}{Optional - Number of rows at the top of the choice list that should stay frozen. Defaults to NULL}
 
 \item{freeze_bottom}{Optional - Number of rows at the bottom of the choice list that should stay froze. Defaults to NULL. If both `freeze_top` and `freeze_bottom` are NULL, items with a value less than 90 will be randomized.}
 
 \item{pth}{Optional - A file path to where the output should be saved. Defaults to the current working directory}
+
+\item{formatt}{Either `"xlsx"` or `"csv"`; Defaults to "xlsx"}
 
 \item{output}{Optional - If TRUE will return the xlsx form as a data frame to R. If FALSE the only output is the xlsx file. Defaults to TRUE}
 }

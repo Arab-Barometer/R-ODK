@@ -38,7 +38,7 @@
 #'
 #' @param xlsform A (path to a) ODK xlsx survey sheet that has a set of programmed grid questions
 #' @param .group_id Optional - A vector of either integers or characters that describe how the questions should be grouped together. Defaults to NULL, which randomized every question
-#' @param permutation_limit Optional - An integer to select a random sample of all possible permutations for semi-randomization
+#' @param permutation_limit Optional - An integer to select a random sample of all possible permutations for semi-randomization. If this number is greater than or equal to the total possible permutations, it will be ignored and all permutations will be used.
 #' @param pth Optional - A file path to where the output should be saved. Defaults to the current working directory
 #' @param output Optional - If TRUE will return the xlsx form as a data frame to R. If FALSE the only output is the xlsx file. Defaults to TRUE
 #'
@@ -92,9 +92,11 @@ randomize_question_order <- function(xlsform,
 
   # Creating permutations:
   all.perm <- combinat::permn(names(loose_groups))
-  if (!is.null(permutation_limit)){
+  if (!is.null(permutation_limit) & permutation_limit < length(all.perm)){
     all.perm <- sample(all.perm,
                        permutation_limit)
+  }else if (!is.null(permutation_limit) & permutation_limit >= length(all.perm)){
+    warning("The number of permutations you entered for `permutation_limit` is greater than or equal to the total number of possible permutations. Therefore, the file will include all possible permutations.")
   }
   return(all.perm)
 

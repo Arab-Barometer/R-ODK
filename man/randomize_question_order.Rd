@@ -17,7 +17,7 @@ randomize_question_order(
 
 \item{.group_id}{Optional - A vector of either integers or characters that describe how the questions should be grouped together. Defaults to NULL, which randomized every question}
 
-\item{permutation_limit}{Optional - An integer to select a random sample of all possible permutations for semi-randomization}
+\item{permutation_limit}{Optional - An integer to select a random sample of all possible permutations for semi-randomization. If this number is greater than or equal to the total possible permutations, it will be ignored and all permutations will be used.}
 
 \item{pth}{Optional - A file path to where the output should be saved. Defaults to the current working directory}
 

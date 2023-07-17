@@ -108,8 +108,10 @@ randomize_choice_order <- function(choice_sheet,
 
   }
 
-  insight::format_warning("Do not forget to create a calculate question in the {.b survey} sheet with the following calculation:",
+  insight::format_warning("Do not forget to create a {.b calculate question} in the survey sheet with the following calculation:",
                           stringr::str_glue("once(round((random()*{length(all.perm) - 1})) + 1, 0)"))
+  insight::format_warning("Do not forget to create a {.b choice filter} in the survey sheet with the following calculation:",
+                          stringr::str_glue("RandomChoice = ${calculate question name} or RandomChoice = 0"))
 
   if(!is.null(pth)){
     if(stringr::str_detect(pth,"/",negate = T)){

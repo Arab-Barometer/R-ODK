@@ -92,13 +92,14 @@ randomize_question_order <- function(xlsform,
 
   # Creating permutations:
   all.perm <- combinat::permn(names(loose_groups))
-  if (!is.null(permutation_limit) & permutation_limit < length(all.perm)){
+  if (!is.null(permutation_limit)){
+    if (permutation_limit < length(all.perm)){
     all.perm <- sample(all.perm,
                        permutation_limit)
-  }else if (!is.null(permutation_limit) & permutation_limit >= length(all.perm)){
-    warning("The number of permutations you entered for `permutation_limit` is greater than or equal to the total number of possible permutations. Therefore, the file will include all possible permutations.")
-  }
-  return(all.perm)
+    }else if (permutation_limit >= length(all.perm)){
+      warning("The number of permutations you entered for `permutation_limit` is greater than or equal to the total number of possible permutations. Therefore, the file will include all possible permutations.")
+    }
+    }
 
   for (i in 1:length(all.perm)) {
 
